@@ -1,0 +1,11 @@
+	<tag>
+		<name>FederatedSearch</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.search.Search</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+
+	<tag>
+		<name>bootstrapSite</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.BootstrapSite</tag-class>
+		<body-content>JSP</body-content>
+	</tag>

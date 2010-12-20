@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+	<tlib-version>2.1</tlib-version>
+	<short-name>simp</short-name>
+	<uri>http://icts.uiowa.edu/FederationTagLib</uri>
+
+	<tag>
+		<name>getSequenceNumber</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.Sequence</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>dbtest</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.DBTest</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+
+	<tag>
+		<name>foreachSite</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteIterator</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sortCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>limitCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>site</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.Site</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>deleteSite</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteDeleter</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteSid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteSid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteName</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteName</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteBootstrapUrl</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteBootstrapUrl</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>bootstrapUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteAggregateQueryUrl</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteAggregateQueryUrl</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>aggregateQueryUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteLastValidation</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteLastValidation</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>lastValidation</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteLastValidationToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteLastValidationToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>lastValidation</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>siteIpAddress</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.SiteIpAddress</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>ipAddress</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>foreachOutboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryIterator</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sortCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>limitCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>outboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>deleteOutboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryDeleter</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>outboundQueryQid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryQid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>outboundQueryQueryString</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryQueryString</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryString</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>outboundQueryQueryDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryQueryDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>outboundQueryQueryDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryQueryDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>foreachResponse</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sortCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>limitCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>useSite</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>useOutboundQuery</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+	</tag>
+
+	<tag>
+		<name>response</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.Response</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>deleteResponse</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseDeleter</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseSid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseSid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseQid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseQid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseRequestDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseRequestDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>requestDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseRequestDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseRequestDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>requestDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseResponseDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseResponseDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>responseDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseResponseDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseResponseDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>responseDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseHitCount</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseHitCount</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>hitCount</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responsePopulationType</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponsePopulationType</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>populationType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responsePreviewUrl</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponsePreviewUrl</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>previewUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseResultsUrl</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseResultsUrl</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>resultsUrl</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseClickDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseClickDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>clickDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>responseClickDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.response.ResponseClickDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>clickDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>foreachInboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryIterator</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sortCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>limitCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>deleteInboundQuery</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryDeleter</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQueryQid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryQid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>qid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQueryQueryString</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryQueryString</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryString</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQueryQueryDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryQueryDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQueryQueryDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryQueryDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>queryDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundQueryIpAddress</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryIpAddress</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>ipAddress</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>foreachInboundSearch</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIterator</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sortCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>limitCriteria</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearch</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>deleteInboundSearch</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchDeleter</tag-class>
+		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearchSid</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchSid</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>sid</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearchSearchString</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchSearchString</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>searchString</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearchSearchDate</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchSearchDate</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>searchDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>dateStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>timeStyle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+
+		<attribute>
+			<name>pattern</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearchSearchDateToNow</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchSearchDateToNow</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>searchDate</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>inboundSearchIpAddress</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIpAddress</tag-class>
+		<body-content>empty</body-content>
+
+		<attribute>
+			<name>ipAddress</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+
+	<tag>
+		<name>FederatedSearch</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.search.Search</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+
+	<tag>
+		<name>bootstrapSite</name>
+		<tag-class>edu.uiowa.icts.FederationTagLib.site.BootstrapSite</tag-class>
+		<body-content>JSP</body-content>
+	</tag>
+
+	<function>
+		<name>siteCount</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.SiteIterator</function-class>
+		<function-signature>java.lang.String siteCount()</function-signature>
+	</function>
+
+	<function>
+		<name>siteExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.SiteIterator</function-class>
+		<function-signature>java.lang.String siteExists(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>siteSidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.Integer sidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>siteNameValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.String nameValue()</function-signature>
+	</function>
+
+	<function>
+		<name>siteBootstrapUrlValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.String bootstrapUrlValue()</function-signature>
+	</function>
+
+	<function>
+		<name>siteAggregateQueryUrlValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.String aggregateQueryUrlValue()</function-signature>
+	</function>
+
+	<function>
+		<name>siteLastValidationValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.Date lastValidationValue()</function-signature>
+	</function>
+
+	<function>
+		<name>siteIpAddressValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
+		<function-signature>java.lang.String ipAddressValue()</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryCount</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryIterator</function-class>
+		<function-signature>java.lang.String outboundQueryCount()</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryIterator</function-class>
+		<function-signature>java.lang.String outboundQueryExists(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryQidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
+		<function-signature>java.lang.Integer qidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryQueryStringValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
+		<function-signature>java.lang.String queryStringValue()</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryQueryDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
+		<function-signature>java.lang.Date queryDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.String responseExists(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>responseCountBySite</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.String responseCountBySite(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>siteHasResponse</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.Boolean siteHasResponse(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>responseCountByOutboundQuery</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.String responseCountByOutboundQuery(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>outboundQueryHasResponse</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.Boolean outboundQueryHasResponse(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>siteOutboundQueryExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.ResponseIterator</function-class>
+		<function-signature>java.lang.Boolean siteOutboundQueryExists(java.lang.String, java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>responseSidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Integer sidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseQidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Integer qidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseRequestDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Date requestDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseResponseDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Date responseDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseHitCountValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Integer hitCountValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responsePopulationTypeValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.String populationTypeValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responsePreviewUrlValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.String previewUrlValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseResultsUrlValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.String resultsUrlValue()</function-signature>
+	</function>
+
+	<function>
+		<name>responseClickDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
+		<function-signature>java.lang.Date clickDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryCount</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryIterator</function-class>
+		<function-signature>java.lang.String inboundQueryCount()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryIterator</function-class>
+		<function-signature>java.lang.String inboundQueryExists(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryQidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
+		<function-signature>java.lang.Integer qidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryQueryStringValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
+		<function-signature>java.lang.String queryStringValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryQueryDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
+		<function-signature>java.lang.Date queryDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundQueryIpAddressValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
+		<function-signature>java.lang.String ipAddressValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchCount</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIterator</function-class>
+		<function-signature>java.lang.String inboundSearchCount()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchExists</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIterator</function-class>
+		<function-signature>java.lang.String inboundSearchExists(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchSidValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
+		<function-signature>java.lang.Integer sidValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchSearchStringValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
+		<function-signature>java.lang.String searchStringValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchSearchDateValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
+		<function-signature>java.lang.Date searchDateValue()</function-signature>
+	</function>
+
+	<function>
+		<name>inboundSearchIpAddressValue</name>
+		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
+		<function-signature>java.lang.String ipAddressValue()</function-signature>
+	</function>
+</taglib>

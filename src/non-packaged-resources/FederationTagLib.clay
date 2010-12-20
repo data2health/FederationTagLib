@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<clay-model clay-version="1.4.2">
+<database-model alias="" author="" begin-script="CREATE SCHEMA FederationTagLib;&#13;create sequence FederationTagLib.seqnum;" end-script="" name="FederationTagLib" remarks="" sql-dialect-id="jp.azzurri.clay.dialect.Postgre_7_3_Dialect" uid="b2f0d4f:1262dfa92b3:-7ff6" version="1.0">
+<database-model-description/>
+<schema-list>
+<schema alias="" name="federation" remarks="" uid="b2f0d4f:1262dfa92b3:-7ff3">
+<schema-description/>
+<domain-list>
+<domain alias="" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="image" remarks="" uid="b2f0d4f:1262dfa92b3:-7fd2">
+<domain-description/>
+<data-type jdbc-type="-2" name="BYTEA" selected-variant-pattern="BYTEA">
+<variant type-name-pattern="BYTEA"/>
+</data-type>
+</domain>
+<domain alias="" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="document" remarks="" uid="b2f0d4f:1262dfa92b3:-7fd1">
+<domain-description/>
+<data-type jdbc-type="-2" name="BYTEA" selected-variant-pattern="BYTEA">
+<variant type-name-pattern="BYTEA"/>
+</data-type>
+</domain>
+<domain alias="" column-size="5" decimal-digits="0" default-value="" mandatory="false" name="trinary" remarks="" uid="b2f0d4f:1262dfa92b3:-7fd0">
+<domain-description/>
+<data-type jdbc-type="12" literal-prefix="'" literal-suffix="'" name="VARCHAR" selected-variant-pattern="VARCHAR(%n)">
+<variant precision-max="2147483647" precision-min="1" precision-variable="%n" type-name-pattern="VARCHAR(%n)"/>
+</data-type>
+</domain>
+</domain-list>
+<table-list>
+<table alias="" name="site" remarks="" uid="7c7e660a:12aa003ddf5:-7fd6">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="498" y="257"/>
+<column-list>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="sid" remarks="" uid="7c7e660a:12aa003ddf5:-7fd2">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="name" remarks="" uid="7c7e660a:12aa003ddf5:-7fd1">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="bootstrap_url" remarks="" uid="7c7e660a:12aa003ddf5:-7fd0">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="aggregate_query_url" remarks="" uid="7c7e660a:12aa003ddf5:-7fcd">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="last_validation" remarks="" uid="7c7e660a:12aa003ddf5:-7fca">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="ip_address" remarks="" uid="7c7e660a:12aa003ddf5:-7f6f">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_SITE" remarks="" uid="7c7e660a:12aa003ddf5:-7fd5">
+<primary-key-description/>
+<primary-key-column name="sid"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="" name="outbound_query" remarks="" uid="7c7e660a:12aa003ddf5:-7fc9">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="880" y="309"/>
+<column-list>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="qid" remarks="" uid="7c7e660a:12aa003ddf5:-7fc5">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="query_string" remarks="" uid="7c7e660a:12aa003ddf5:-7fc4">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="query_date" remarks="" uid="7c7e660a:12aa003ddf5:-7fc3">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_OUTBOUND_QUERY" remarks="" uid="7c7e660a:12aa003ddf5:-7fc8">
+<primary-key-description/>
+<primary-key-column name="qid"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="" name="response" remarks="" uid="7c7e660a:12aa003ddf5:-7fc2">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="647" y="399"/>
+<column-list>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="sid" remarks="" uid="7c7e660a:12aa003ddf5:-7fa6">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="qid" remarks="" uid="7c7e660a:12aa003ddf5:-7f8f">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="request_date" remarks="" uid="599975f0:12af6df89ea:-7f51">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="response_date" remarks="" uid="599975f0:12af6df89ea:-7f50">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="hit_count" remarks="" uid="599975f0:12af6df89ea:-7f54">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="population_type" remarks="" uid="14021e91:12af96f2235:-7ff0">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="preview_url" remarks="" uid="14021e91:12af96f2235:-7ff4">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="results_url" remarks="" uid="14021e91:12af96f2235:-7ff3">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="click_date" remarks="" uid="7c7e660a:12aa003ddf5:-7f89">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_RESPONSE" remarks="" uid="7c7e660a:12aa003ddf5:-7fc1">
+<primary-key-description/>
+<primary-key-column name="sid"/>
+<primary-key-column name="qid"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list>
+<foreign-key alias="" name="FK_click_through_1" on-delete="" on-update="" referenced-key="PK_SITE" referenced-table="site" referenced-table-schema="federation" remarks="" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="" uid="7c7e660a:12aa003ddf5:-7fa7">
+<foreign-key-description/>
+<foreign-key-figure>
+<fk-fig-bendpoint-list/>
+</foreign-key-figure>
+<foreign-key-column column-name="sid" referenced-key-column-name="sid"/>
+</foreign-key>
+<foreign-key alias="" name="FK_click_through_2" on-delete="" on-update="" referenced-key="PK_OUTBOUND_QUERY" referenced-table="outbound_query" referenced-table-schema="federation" remarks="" source-entity-role="" source-multiplicity="0..*" source-relationship-type="" target-entity-role="" target-multiplicity="1" target-relationship-type="" uid="7c7e660a:12aa003ddf5:-7f90">
+<foreign-key-description/>
+<foreign-key-figure>
+<fk-fig-bendpoint-list/>
+</foreign-key-figure>
+<foreign-key-column column-name="qid" referenced-key-column-name="qid"/>
+</foreign-key>
+</foreign-key-list>
+<index-list/>
+</table>
+<table alias="" name="inbound_query" remarks="" uid="7c7e660a:12aa003ddf5:-7f86">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="355" y="389"/>
+<column-list>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="qid" remarks="" uid="7c7e660a:12aa003ddf5:-7f82">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="query_string" remarks="" uid="7c7e660a:12aa003ddf5:-7f81">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="query_date" remarks="" uid="7c7e660a:12aa003ddf5:-7f80">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="ip_address" remarks="" uid="7c7e660a:12aa003ddf5:-7f75">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_INBOUND_QUERY" remarks="" uid="7c7e660a:12aa003ddf5:-7f85">
+<primary-key-description/>
+<primary-key-column name="qid"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+<table alias="" name="inbound_search" remarks="" uid="7c7e660a:12aa003ddf5:-7f7f">
+<table-description/>
+<table-figure-bounds height="-1" width="-1" x="409" y="478"/>
+<column-list>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="true" name="sid" remarks="" uid="7c7e660a:12aa003ddf5:-7f7d">
+<column-description/>
+<data-type jdbc-type="4" name="INT" selected-variant-pattern="INT">
+<variant type-name-pattern="INT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="search_string" remarks="" uid="7c7e660a:12aa003ddf5:-7f7c">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="search_date" remarks="" uid="7c7e660a:12aa003ddf5:-7f7b">
+<column-description/>
+<data-type jdbc-type="93" name="TIMESTAMP" selected-variant-pattern="TIMESTAMP">
+<variant type-name-pattern="TIMESTAMP"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p)"/>
+<variant type-name-pattern="TIMESTAMP WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITH TIME ZONE"/>
+<variant precision-max="9" precision-min="1" precision-variable="%p" type-name-pattern="TIMESTAMP(%p) WITHOUT TIME ZONE"/>
+</data-type>
+</column>
+<column alias="" auto-increment="false" column-size="0" decimal-digits="0" default-value="" mandatory="false" name="ip_address" remarks="" uid="7c7e660a:12aa003ddf5:-7f72">
+<column-description/>
+<data-type jdbc-type="-1" literal-prefix="'" literal-suffix="'" name="TEXT" selected-variant-pattern="TEXT">
+<variant type-name-pattern="TEXT"/>
+</data-type>
+</column>
+</column-list>
+<primary-key alias="" name="PK_INBOUND_SEARCH" remarks="" uid="7c7e660a:12aa003ddf5:-7f7a">
+<primary-key-description/>
+<primary-key-column name="sid"/>
+</primary-key>
+<unique-key-list/>
+<foreign-key-list/>
+<index-list/>
+</table>
+</table-list>
+</schema>
+</schema-list>
+</database-model>
+</clay-model>
