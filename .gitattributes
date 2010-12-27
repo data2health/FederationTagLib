@@ -6,8 +6,6 @@
 .settings/org.eclipse.wst.common.project.facet.core.xml svneol=native#text/xml
 .settings/org.maven.ide.eclipse.prefs -text
 /pom.xml svneol=native#text/xml
-src/main/java/FederationTagLib/search/Search.java svneol=native#text/x-java-source
-src/main/java/FederationTagLib/site/BootstrapSite.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/DBTest.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/FederationTagLibBodyTagSupport.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/FederationTagLibTagSupport.java svneol=native#text/x-java-source
@@ -53,6 +51,9 @@ src/main/java/edu/uiowa/icts/FederationTagLib/response/ResponseResponseDate.java
 src/main/java/edu/uiowa/icts/FederationTagLib/response/ResponseResponseDateToNow.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/response/ResponseResultsUrl.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/response/ResponseSid.java svneol=native#text/x-java-source
+src/main/java/edu/uiowa/icts/FederationTagLib/search/Search.java svneol=native#text/x-java-source
+src/main/java/edu/uiowa/icts/FederationTagLib/search/SearchThread.java svneol=native#text/x-java-source
+src/main/java/edu/uiowa/icts/FederationTagLib/site/BootstrapSite.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/site/Site.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/site/SiteAggregateQueryUrl.java svneol=native#text/x-java-source
 src/main/java/edu/uiowa/icts/FederationTagLib/site/SiteBootstrapUrl.java svneol=native#text/x-java-source
@@ -69,3 +70,5 @@ src/non-packaged-resources/FederationTagLib.sql svneol=native#text/plain
 src/non-packaged-resources/tags.tld -text svneol=unset#text/xml
 src/test/java/edu/uiowa/icts/FederationTagLib/README.txt svneol=native#text/plain
 src/test/resources/README.txt svneol=native#text/plain
+target/FederationTagLib-0.0.1-SNAPSHOT.jar -text svneol=unset#aplication/java-archive
+target/maven-archiver/pom.properties -text
