@@ -70,5 +70,3 @@ src/non-packaged-resources/FederationTagLib.sql svneol=native#text/plain
 src/non-packaged-resources/tags.tld -text svneol=unset#text/xml
 src/test/java/edu/uiowa/icts/FederationTagLib/README.txt svneol=native#text/plain
 src/test/resources/README.txt svneol=native#text/plain
-target/FederationTagLib-0.0.1-SNAPSHOT.jar -text svneol=unset#aplication/java-archive
-target/maven-archiver/pom.properties -text
