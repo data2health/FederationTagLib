@@ -9,8 +9,8 @@
 
    <url>http://www.icts.uiowa.edu/confluence/display/apps/FederationTagLib</url>
    <scm>
-      <connection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/branches/maven/</connection>
-      <developerConnection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/branches/maven/</developerConnection>
+      <connection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/trunk</connection>
+      <developerConnection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/trunk</developerConnection>
       <url>https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib</url>
    </scm>
    <distributionManagement>
@@ -57,13 +57,6 @@
          <groupId>commons-logging</groupId>
          <artifactId>commons-logging</artifactId>
          <version>1.1.1</version>
-      </dependency>
-      <dependency>
-         <groupId>edu.uiowa.icts.plugin</groupId>
-         <artifactId>protogen-plugin</artifactId>
-         <version>0.0.4</version>
-         <type>jar</type>
-         <scope>compile</scope>
       </dependency>
       <dependency>
       	<groupId>dom4j</groupId>
