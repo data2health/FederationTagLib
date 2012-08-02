@@ -61,6 +61,12 @@
 		<body-content>JSP</body-content>
 
 		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
 			<name>sid</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -223,6 +229,12 @@
 		<body-content>JSP</body-content>
 
 		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
 			<name>qid</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -366,6 +378,12 @@
 		<name>response</name>
 		<tag-class>edu.uiowa.icts.FederationTagLib.response.Response</tag-class>
 		<body-content>JSP</body-content>
+
+		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 
 		<attribute>
 			<name>sid</name>
@@ -650,6 +668,12 @@
 		<body-content>JSP</body-content>
 
 		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
 			<name>qid</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -788,6 +812,12 @@
 		<body-content>JSP</body-content>
 
 		<attribute>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+
+		<attribute>
 			<name>sid</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -915,42 +945,6 @@
 	</function>
 
 	<function>
-		<name>siteSidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.Integer sidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>siteNameValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.String nameValue()</function-signature>
-	</function>
-
-	<function>
-		<name>siteBootstrapUrlValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.String bootstrapUrlValue()</function-signature>
-	</function>
-
-	<function>
-		<name>siteAggregateQueryUrlValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.String aggregateQueryUrlValue()</function-signature>
-	</function>
-
-	<function>
-		<name>siteLastValidationValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.Date lastValidationValue()</function-signature>
-	</function>
-
-	<function>
-		<name>siteIpAddressValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.site.Site</function-class>
-		<function-signature>java.lang.String ipAddressValue()</function-signature>
-	</function>
-
-	<function>
 		<name>outboundQueryCount</name>
 		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryIterator</function-class>
 		<function-signature>java.lang.String outboundQueryCount()</function-signature>
@@ -960,24 +954,6 @@
 		<name>outboundQueryExists</name>
 		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQueryIterator</function-class>
 		<function-signature>java.lang.String outboundQueryExists(java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>outboundQueryQidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
-		<function-signature>java.lang.Integer qidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>outboundQueryQueryStringValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
-		<function-signature>java.lang.String queryStringValue()</function-signature>
-	</function>
-
-	<function>
-		<name>outboundQueryQueryDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery</function-class>
-		<function-signature>java.lang.Date queryDateValue()</function-signature>
 	</function>
 
 	<function>
@@ -1017,60 +993,6 @@
 	</function>
 
 	<function>
-		<name>responseSidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Integer sidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseQidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Integer qidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseRequestDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Date requestDateValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseResponseDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Date responseDateValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseHitCountValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Integer hitCountValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responsePopulationTypeValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.String populationTypeValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responsePreviewUrlValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.String previewUrlValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseResultsUrlValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.String resultsUrlValue()</function-signature>
-	</function>
-
-	<function>
-		<name>responseClickDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.response.Response</function-class>
-		<function-signature>java.lang.Date clickDateValue()</function-signature>
-	</function>
-
-	<function>
 		<name>inboundQueryCount</name>
 		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQueryIterator</function-class>
 		<function-signature>java.lang.String inboundQueryCount()</function-signature>
@@ -1083,30 +1005,6 @@
 	</function>
 
 	<function>
-		<name>inboundQueryQidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
-		<function-signature>java.lang.Integer qidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundQueryQueryStringValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
-		<function-signature>java.lang.String queryStringValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundQueryQueryDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
-		<function-signature>java.lang.Date queryDateValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundQueryIpAddressValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundQuery.InboundQuery</function-class>
-		<function-signature>java.lang.String ipAddressValue()</function-signature>
-	</function>
-
-	<function>
 		<name>inboundSearchCount</name>
 		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIterator</function-class>
 		<function-signature>java.lang.String inboundSearchCount()</function-signature>
@@ -1116,29 +1014,5 @@
 		<name>inboundSearchExists</name>
 		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearchIterator</function-class>
 		<function-signature>java.lang.String inboundSearchExists(java.lang.String)</function-signature>
-	</function>
-
-	<function>
-		<name>inboundSearchSidValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
-		<function-signature>java.lang.Integer sidValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundSearchSearchStringValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
-		<function-signature>java.lang.String searchStringValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundSearchSearchDateValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
-		<function-signature>java.lang.Date searchDateValue()</function-signature>
-	</function>
-
-	<function>
-		<name>inboundSearchIpAddressValue</name>
-		<function-class>edu.uiowa.icts.FederationTagLib.inboundSearch.InboundSearch</function-class>
-		<function-signature>java.lang.String ipAddressValue()</function-signature>
 	</function>
 </taglib>

@@ -16,14 +16,13 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
 
 @SuppressWarnings("serial")
-
 public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
     int qid = 0;
     String queryString = null;
     Date queryDate = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
-	private static final Log log =LogFactory.getLog(OutboundQuery.class);
+	private static final Log log = LogFactory.getLog(OutboundQueryIterator.class);
 
 
     PreparedStatement stat = null;
@@ -47,7 +46,7 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating OutboundQuery iterator", e);
 			throw new JspTagException("Error: JDBC error generating OutboundQuery iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -71,7 +70,7 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating OutboundQuery iterator", e);
 			throw new JspTagException("Error: JDBC error generating OutboundQuery iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -84,7 +83,20 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
 
 
       try {
+            //run count query  
             int webapp_keySeq = 1;
+            stat = getConnection().prepareStatement("SELECT count(*) from " + generateFromClause() + " where 1=1"
+                                                        + generateJoinCriteria()
+                                                        +  generateLimitCriteria());
+            rs = stat.executeQuery();
+
+            if (rs.next()) {
+                pageContext.setAttribute(var+"Total", rs.getInt(1));
+            }
+
+
+            //run select id query  
+            webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT federation.outbound_query.qid from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
                                                         + " order by " + generateSortCriteria() + generateLimitCriteria());
@@ -96,7 +108,7 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating OutboundQuery iterator: " + stat.toString(), e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error generating OutboundQuery iterator: " + stat.toString());
@@ -139,7 +151,7 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_AGAIN;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error iterating across OutboundQuery", e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error iterating across OutboundQuery");
@@ -152,7 +164,7 @@ public class OutboundQueryIterator extends FederationTagLibBodyTagSupport {
             rs.close();
             stat.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error ending OutboundQuery iterator",e);
             throw new JspTagException("Error: JDBC error ending OutboundQuery iterator");
         } finally {
             clearServiceState();

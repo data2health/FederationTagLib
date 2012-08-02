@@ -2,11 +2,15 @@ package edu.uiowa.icts.FederationTagLib.response;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 
 @SuppressWarnings("serial")
 public class ResponseSid extends FederationTagLibTagSupport {
+	private static final Log log = LogFactory.getLog(ResponseSid.class);
+
 
 	public int doStartTag() throws JspException {
 		try {
@@ -15,7 +19,7 @@ public class ResponseSid extends FederationTagLibTagSupport {
 				pageContext.getOut().print(theResponse.getSid());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for sid tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for sid tag ");
 		}
 		return SKIP_BODY;
@@ -26,7 +30,7 @@ public class ResponseSid extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			return theResponse.getSid();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(" Can't find enclosing Response for sid tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for sid tag ");
 		}
 	}
@@ -36,7 +40,7 @@ public class ResponseSid extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			theResponse.setSid(sid);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for sid tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for sid tag ");
 		}
 	}

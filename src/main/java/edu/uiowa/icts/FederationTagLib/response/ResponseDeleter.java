@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import java.util.Date;
 
 import javax.servlet.jsp.JspException;
@@ -16,7 +18,6 @@ import edu.uiowa.icts.FederationTagLib.site.Site;
 import edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery;
 
 @SuppressWarnings("serial")
-
 public class ResponseDeleter extends FederationTagLibBodyTagSupport {
     int sid = 0;
     int qid = 0;
@@ -28,6 +29,8 @@ public class ResponseDeleter extends FederationTagLibBodyTagSupport {
     String resultsUrl = null;
     Date clickDate = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
+
+	private static final Log log = LogFactory.getLog(ResponseDeleter.class);
 
 
     ResultSet rs = null;
@@ -56,15 +59,15 @@ public class ResponseDeleter extends FederationTagLibBodyTagSupport {
         try {
             int webapp_keySeq = 1;
             stat = getConnection().prepareStatement("DELETE from federation.response where 1=1"
-                                                        + (sid == 0 ? "" : " and sid = ?")
-                                                        + (qid == 0 ? "" : " and qid = ?")
-                                                        );
+                                                        + (sid == 0 ? "" : " and sid = ? ")
+                                                        + (qid == 0 ? "" : " and qid = ? "));
             if (sid != 0) stat.setInt(webapp_keySeq++, sid);
             if (qid != 0) stat.setInt(webapp_keySeq++, qid);
             stat.execute();
 
+			webapp_keySeq = 1;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating Response deleter", e);
             clearServiceState();
             throw new JspTagException("Error: JDBC error generating Response deleter");
         } finally {

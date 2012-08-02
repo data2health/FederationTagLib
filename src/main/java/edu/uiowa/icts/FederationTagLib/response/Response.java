@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.Date;
@@ -17,14 +18,13 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
 
 @SuppressWarnings("serial")
-
 public class Response extends FederationTagLibTagSupport {
 
 	static Response currentInstance = null;
 	boolean commitNeeded = false;
 	boolean newRecord = false;
 
-	private static final Log log =LogFactory.getLog(Response.class);
+	private static final Log log = LogFactory.getLog(Response.class);
 
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
@@ -37,6 +37,10 @@ public class Response extends FederationTagLibTagSupport {
 	String previewUrl = null;
 	String resultsUrl = null;
 	Date clickDate = null;
+
+	private String var = null;
+
+	private Response cachedResponse = null;
 
 	public int doStartTag() throws JspException {
 		currentInstance = this;
@@ -67,7 +71,6 @@ public class Response extends FederationTagLibTagSupport {
 			if (theResponseIterator == null && theSite == null && theOutboundQuery == null && sid == 0) {
 				// no sid was provided - the default is to assume that it is a new Response and to generate a new sid
 				sid = Sequence.generateID();
-				log.debug("generating new Response " + sid);
 				insertEntity();
 			} else if (theResponseIterator == null && theSite != null && theOutboundQuery == null) {
 				// an sid was provided as an attribute - we need to load a Response from the database
@@ -160,16 +163,32 @@ public class Response extends FederationTagLibTagSupport {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error retrieving sid " + sid, e);
 			throw new JspTagException("Error: JDBC error retrieving sid " + sid);
 		} finally {
 			freeConnection();
 		}
+
+		Response currentResponse = (Response) pageContext.getAttribute("tag_response");
+		if(currentResponse != null){
+			cachedResponse = currentResponse;
+		}
+		currentResponse = this;
+		pageContext.setAttribute((var == null ? "tag_response" : var), currentResponse);
+
 		return EVAL_PAGE;
 	}
 
 	public int doEndTag() throws JspException {
 		currentInstance = null;
+
+		if(this.cachedResponse != null){
+			pageContext.setAttribute((var == null ? "tag_response" : var), this.cachedResponse);
+		}else{
+			pageContext.removeAttribute((var == null ? "tag_response" : var));
+			this.cachedResponse = null;
+		}
+
 		try {
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.response set request_date = ?, response_date = ?, hit_count = ?, population_type = ?, preview_url = ?, results_url = ?, click_date = ? where sid = ? and qid = ?");
@@ -186,7 +205,7 @@ public class Response extends FederationTagLibTagSupport {
 				stmt.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			clearServiceState();
@@ -216,7 +235,7 @@ public class Response extends FederationTagLibTagSupport {
 			stmt.executeUpdate();
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			freeConnection();
@@ -362,7 +381,19 @@ public class Response extends FederationTagLibTagSupport {
 		commitNeeded = true;
 	}
 
-	public static int sidValue() throws JspException {
+	public String getVar () {
+		return var;
+	}
+
+	public void setVar (String var) {
+		this.var = var;
+	}
+
+	public String getActualVar () {
+		return var;
+	}
+
+	public static Integer sidValue() throws JspException {
 		try {
 			return currentInstance.getSid();
 		} catch (Exception e) {
@@ -370,7 +401,7 @@ public class Response extends FederationTagLibTagSupport {
 		}
 	}
 
-	public static int qidValue() throws JspException {
+	public static Integer qidValue() throws JspException {
 		try {
 			return currentInstance.getQid();
 		} catch (Exception e) {
@@ -394,7 +425,7 @@ public class Response extends FederationTagLibTagSupport {
 		}
 	}
 
-	public static int hitCountValue() throws JspException {
+	public static Integer hitCountValue() throws JspException {
 		try {
 			return currentInstance.getHitCount();
 		} catch (Exception e) {
@@ -447,6 +478,7 @@ public class Response extends FederationTagLibTagSupport {
 		newRecord = false;
 		commitNeeded = false;
 		parentEntities = new Vector<FederationTagLibTagSupport>();
+		this.var = null;
 
 	}
 

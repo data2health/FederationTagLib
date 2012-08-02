@@ -16,7 +16,6 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
 
 @SuppressWarnings("serial")
-
 public class SiteIterator extends FederationTagLibBodyTagSupport {
     int sid = 0;
     String name = null;
@@ -26,7 +25,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
     String ipAddress = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
-	private static final Log log =LogFactory.getLog(Site.class);
+	private static final Log log = LogFactory.getLog(SiteIterator.class);
 
 
     PreparedStatement stat = null;
@@ -50,7 +49,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Site iterator", e);
 			throw new JspTagException("Error: JDBC error generating Site iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -74,7 +73,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Site iterator", e);
 			throw new JspTagException("Error: JDBC error generating Site iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -87,7 +86,20 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
 
 
       try {
+            //run count query  
             int webapp_keySeq = 1;
+            stat = getConnection().prepareStatement("SELECT count(*) from " + generateFromClause() + " where 1=1"
+                                                        + generateJoinCriteria()
+                                                        +  generateLimitCriteria());
+            rs = stat.executeQuery();
+
+            if (rs.next()) {
+                pageContext.setAttribute(var+"Total", rs.getInt(1));
+            }
+
+
+            //run select id query  
+            webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT federation.site.sid from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
                                                         + " order by " + generateSortCriteria() + generateLimitCriteria());
@@ -99,7 +111,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating Site iterator: " + stat.toString(), e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error generating Site iterator: " + stat.toString());
@@ -142,7 +154,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_AGAIN;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error iterating across Site", e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error iterating across Site");
@@ -155,7 +167,7 @@ public class SiteIterator extends FederationTagLibBodyTagSupport {
             rs.close();
             stat.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error ending Site iterator",e);
             throw new JspTagException("Error: JDBC error ending Site iterator");
         } finally {
             clearServiceState();

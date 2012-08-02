@@ -2,11 +2,15 @@ package edu.uiowa.icts.FederationTagLib.inboundQuery;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 
 @SuppressWarnings("serial")
 public class InboundQueryIpAddress extends FederationTagLibTagSupport {
+	private static final Log log = LogFactory.getLog(InboundQueryIpAddress.class);
+
 
 	public int doStartTag() throws JspException {
 		try {
@@ -15,7 +19,7 @@ public class InboundQueryIpAddress extends FederationTagLibTagSupport {
 				pageContext.getOut().print(theInboundQuery.getIpAddress());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing InboundQuery for ipAddress tag ", e);
 			throw new JspTagException("Error: Can't find enclosing InboundQuery for ipAddress tag ");
 		}
 		return SKIP_BODY;
@@ -26,7 +30,7 @@ public class InboundQueryIpAddress extends FederationTagLibTagSupport {
 			InboundQuery theInboundQuery = (InboundQuery)findAncestorWithClass(this, InboundQuery.class);
 			return theInboundQuery.getIpAddress();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(" Can't find enclosing InboundQuery for ipAddress tag ", e);
 			throw new JspTagException("Error: Can't find enclosing InboundQuery for ipAddress tag ");
 		}
 	}
@@ -36,7 +40,7 @@ public class InboundQueryIpAddress extends FederationTagLibTagSupport {
 			InboundQuery theInboundQuery = (InboundQuery)findAncestorWithClass(this, InboundQuery.class);
 			theInboundQuery.setIpAddress(ipAddress);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing InboundQuery for ipAddress tag ", e);
 			throw new JspTagException("Error: Can't find enclosing InboundQuery for ipAddress tag ");
 		}
 	}

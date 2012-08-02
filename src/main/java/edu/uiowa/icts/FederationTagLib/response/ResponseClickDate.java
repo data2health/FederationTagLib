@@ -5,6 +5,8 @@ import javax.servlet.jsp.JspTagException;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 
@@ -14,6 +16,8 @@ public class ResponseClickDate extends FederationTagLibTagSupport {
 	String dateStyle = "DEFAULT";
 	String timeStyle = "DEFAULT";
 	String pattern = null;
+	private static final Log log = LogFactory.getLog(ResponseClickDate.class);
+
 
 	public int doStartTag() throws JspException {
 		try {
@@ -36,7 +40,7 @@ public class ResponseClickDate extends FederationTagLibTagSupport {
 				pageContext.getOut().print(resultString);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for clickDate tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for clickDate tag ");
 		}
 		return SKIP_BODY;
@@ -47,7 +51,7 @@ public class ResponseClickDate extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			return theResponse.getClickDate();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(" Can't find enclosing Response for clickDate tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for clickDate tag ");
 		}
 	}
@@ -57,7 +61,7 @@ public class ResponseClickDate extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			theResponse.setClickDate(clickDate);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for clickDate tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for clickDate tag ");
 		}
 	}

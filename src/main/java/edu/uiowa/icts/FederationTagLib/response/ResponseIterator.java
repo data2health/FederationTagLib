@@ -18,7 +18,6 @@ import edu.uiowa.icts.FederationTagLib.site.Site;
 import edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery;
 
 @SuppressWarnings("serial")
-
 public class ResponseIterator extends FederationTagLibBodyTagSupport {
     int sid = 0;
     int qid = 0;
@@ -31,7 +30,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
     Date clickDate = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
-	private static final Log log =LogFactory.getLog(Response.class);
+	private static final Log log = LogFactory.getLog(ResponseIterator.class);
 
 
     PreparedStatement stat = null;
@@ -60,7 +59,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Response iterator", e);
 			throw new JspTagException("Error: JDBC error generating Response iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -88,7 +87,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Response iterator", e);
 			throw new JspTagException("Error: JDBC error generating Response iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -118,7 +117,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Response iterator", e);
 			throw new JspTagException("Error: JDBC error generating Response iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -144,7 +143,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating Response iterator", e);
 			throw new JspTagException("Error: JDBC error generating Response iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -171,7 +170,24 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
 
 
       try {
+            //run count query  
             int webapp_keySeq = 1;
+            stat = getConnection().prepareStatement("SELECT count(*) from " + generateFromClause() + " where 1=1"
+                                                        + generateJoinCriteria()
+                                                        + (sid == 0 ? "" : " and sid = ?")
+                                                        + (qid == 0 ? "" : " and qid = ?")
+                                                        +  generateLimitCriteria());
+            if (sid != 0) stat.setInt(webapp_keySeq++, sid);
+            if (qid != 0) stat.setInt(webapp_keySeq++, qid);
+            rs = stat.executeQuery();
+
+            if (rs.next()) {
+                pageContext.setAttribute(var+"Total", rs.getInt(1));
+            }
+
+
+            //run select id query  
+            webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT federation.response.sid, federation.response.qid from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
                                                         + (sid == 0 ? "" : " and sid = ?")
@@ -188,7 +204,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating Response iterator: " + stat.toString(), e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error generating Response iterator: " + stat.toString());
@@ -242,7 +258,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_AGAIN;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error iterating across Response", e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error iterating across Response");
@@ -255,7 +271,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
             rs.close();
             stat.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error ending Response iterator",e);
             throw new JspTagException("Error: JDBC error ending Response iterator");
         } finally {
             clearServiceState();

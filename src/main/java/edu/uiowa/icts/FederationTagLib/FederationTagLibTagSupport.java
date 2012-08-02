@@ -11,13 +11,13 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-@SuppressWarnings("serial")
 
+@SuppressWarnings("serial")
 public class FederationTagLibTagSupport extends TagSupport {
 
     protected DataSource theDataSource = null;
     protected Connection theConnection = null;
-    private static final Log log =LogFactory.getLog(FederationTagLibTagSupport.class);
+    private static final Log log = LogFactory.getLog(FederationTagLibTagSupport.class);
 
     public FederationTagLibTagSupport() {
         super();
@@ -25,17 +25,17 @@ public class FederationTagLibTagSupport extends TagSupport {
 
     @Override
     public int doEndTag() throws JspException {
-    	freeConnection();
+		freeConnection();
     	return super.doEndTag();
     }
-    
+
     public DataSource getDataSource() {
         if (theDataSource == null) try {
             theDataSource = (DataSource)new InitialContext().lookup("java:/comp/env/jdbc/FederationTagLib");
         } catch (Exception e) {
             log.error("Error in database initialization: " + e);
         }
- 
+
         return theDataSource;
     }
     
@@ -51,7 +51,7 @@ public class FederationTagLibTagSupport extends TagSupport {
          theConnection.close();
         theConnection = null;
      } catch (SQLException e) {
-         e.printStackTrace();
+         log.error("JDBC error freeing connection", e);
         theConnection = null;
          throw new JspTagException("Error: JDBC error freeing connection");
      }

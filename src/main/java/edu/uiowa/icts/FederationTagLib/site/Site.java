@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.Date;
@@ -15,14 +16,13 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
 
 @SuppressWarnings("serial")
-
 public class Site extends FederationTagLibTagSupport {
 
 	static Site currentInstance = null;
 	boolean commitNeeded = false;
 	boolean newRecord = false;
 
-	private static final Log log =LogFactory.getLog(Site.class);
+	private static final Log log = LogFactory.getLog(Site.class);
 
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
@@ -32,6 +32,10 @@ public class Site extends FederationTagLibTagSupport {
 	String aggregateQueryUrl = null;
 	Date lastValidation = null;
 	String ipAddress = null;
+
+	private String var = null;
+
+	private Site cachedSite = null;
 
 	public int doStartTag() throws JspException {
 		currentInstance = this;
@@ -47,7 +51,6 @@ public class Site extends FederationTagLibTagSupport {
 			if (theSiteIterator == null && sid == 0) {
 				// no sid was provided - the default is to assume that it is a new Site and to generate a new sid
 				sid = Sequence.generateID();
-				log.debug("generating new Site " + sid);
 				insertEntity();
 			} else {
 				// an iterator or sid was provided as an attribute - we need to load a Site from the database
@@ -75,16 +78,32 @@ public class Site extends FederationTagLibTagSupport {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error retrieving sid " + sid, e);
 			throw new JspTagException("Error: JDBC error retrieving sid " + sid);
 		} finally {
 			freeConnection();
 		}
+
+		Site currentSite = (Site) pageContext.getAttribute("tag_site");
+		if(currentSite != null){
+			cachedSite = currentSite;
+		}
+		currentSite = this;
+		pageContext.setAttribute((var == null ? "tag_site" : var), currentSite);
+
 		return EVAL_PAGE;
 	}
 
 	public int doEndTag() throws JspException {
 		currentInstance = null;
+
+		if(this.cachedSite != null){
+			pageContext.setAttribute((var == null ? "tag_site" : var), this.cachedSite);
+		}else{
+			pageContext.removeAttribute((var == null ? "tag_site" : var));
+			this.cachedSite = null;
+		}
+
 		try {
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.site set name = ?, bootstrap_url = ?, aggregate_query_url = ?, last_validation = ?, ip_address = ? where sid = ?");
@@ -98,7 +117,7 @@ public class Site extends FederationTagLibTagSupport {
 				stmt.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			clearServiceState();
@@ -132,7 +151,7 @@ public class Site extends FederationTagLibTagSupport {
 			stmt.executeUpdate();
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			freeConnection();
@@ -233,7 +252,19 @@ public class Site extends FederationTagLibTagSupport {
 		return ipAddress;
 	}
 
-	public static int sidValue() throws JspException {
+	public String getVar () {
+		return var;
+	}
+
+	public void setVar (String var) {
+		this.var = var;
+	}
+
+	public String getActualVar () {
+		return var;
+	}
+
+	public static Integer sidValue() throws JspException {
 		try {
 			return currentInstance.getSid();
 		} catch (Exception e) {
@@ -291,6 +322,7 @@ public class Site extends FederationTagLibTagSupport {
 		newRecord = false;
 		commitNeeded = false;
 		parentEntities = new Vector<FederationTagLibTagSupport>();
+		this.var = null;
 
 	}
 

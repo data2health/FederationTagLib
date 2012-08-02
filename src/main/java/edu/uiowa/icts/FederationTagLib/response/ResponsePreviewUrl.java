@@ -2,11 +2,15 @@ package edu.uiowa.icts.FederationTagLib.response;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 
 @SuppressWarnings("serial")
 public class ResponsePreviewUrl extends FederationTagLibTagSupport {
+	private static final Log log = LogFactory.getLog(ResponsePreviewUrl.class);
+
 
 	public int doStartTag() throws JspException {
 		try {
@@ -15,7 +19,7 @@ public class ResponsePreviewUrl extends FederationTagLibTagSupport {
 				pageContext.getOut().print(theResponse.getPreviewUrl());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for previewUrl tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for previewUrl tag ");
 		}
 		return SKIP_BODY;
@@ -26,7 +30,7 @@ public class ResponsePreviewUrl extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			return theResponse.getPreviewUrl();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(" Can't find enclosing Response for previewUrl tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for previewUrl tag ");
 		}
 	}
@@ -36,7 +40,7 @@ public class ResponsePreviewUrl extends FederationTagLibTagSupport {
 			Response theResponse = (Response)findAncestorWithClass(this, Response.class);
 			theResponse.setPreviewUrl(previewUrl);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Can't find enclosing Response for previewUrl tag ", e);
 			throw new JspTagException("Error: Can't find enclosing Response for previewUrl tag ");
 		}
 	}

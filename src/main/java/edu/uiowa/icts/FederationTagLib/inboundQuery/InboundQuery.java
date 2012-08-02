@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.Date;
@@ -15,14 +16,13 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
 
 @SuppressWarnings("serial")
-
 public class InboundQuery extends FederationTagLibTagSupport {
 
 	static InboundQuery currentInstance = null;
 	boolean commitNeeded = false;
 	boolean newRecord = false;
 
-	private static final Log log =LogFactory.getLog(InboundQuery.class);
+	private static final Log log = LogFactory.getLog(InboundQuery.class);
 
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
@@ -30,6 +30,10 @@ public class InboundQuery extends FederationTagLibTagSupport {
 	String queryString = null;
 	Date queryDate = null;
 	String ipAddress = null;
+
+	private String var = null;
+
+	private InboundQuery cachedInboundQuery = null;
 
 	public int doStartTag() throws JspException {
 		currentInstance = this;
@@ -45,7 +49,6 @@ public class InboundQuery extends FederationTagLibTagSupport {
 			if (theInboundQueryIterator == null && qid == 0) {
 				// no qid was provided - the default is to assume that it is a new InboundQuery and to generate a new qid
 				qid = Sequence.generateID();
-				log.debug("generating new InboundQuery " + qid);
 				insertEntity();
 			} else {
 				// an iterator or qid was provided as an attribute - we need to load a InboundQuery from the database
@@ -69,16 +72,32 @@ public class InboundQuery extends FederationTagLibTagSupport {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error retrieving qid " + qid, e);
 			throw new JspTagException("Error: JDBC error retrieving qid " + qid);
 		} finally {
 			freeConnection();
 		}
+
+		InboundQuery currentInboundQuery = (InboundQuery) pageContext.getAttribute("tag_inboundQuery");
+		if(currentInboundQuery != null){
+			cachedInboundQuery = currentInboundQuery;
+		}
+		currentInboundQuery = this;
+		pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), currentInboundQuery);
+
 		return EVAL_PAGE;
 	}
 
 	public int doEndTag() throws JspException {
 		currentInstance = null;
+
+		if(this.cachedInboundQuery != null){
+			pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), this.cachedInboundQuery);
+		}else{
+			pageContext.removeAttribute((var == null ? "tag_inboundQuery" : var));
+			this.cachedInboundQuery = null;
+		}
+
 		try {
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.inbound_query set query_string = ?, query_date = ?, ip_address = ? where qid = ?");
@@ -90,7 +109,7 @@ public class InboundQuery extends FederationTagLibTagSupport {
 				stmt.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			clearServiceState();
@@ -118,7 +137,7 @@ public class InboundQuery extends FederationTagLibTagSupport {
 			stmt.executeUpdate();
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			freeConnection();
@@ -187,7 +206,19 @@ public class InboundQuery extends FederationTagLibTagSupport {
 		return ipAddress;
 	}
 
-	public static int qidValue() throws JspException {
+	public String getVar () {
+		return var;
+	}
+
+	public void setVar (String var) {
+		this.var = var;
+	}
+
+	public String getActualVar () {
+		return var;
+	}
+
+	public static Integer qidValue() throws JspException {
 		try {
 			return currentInstance.getQid();
 		} catch (Exception e) {
@@ -227,6 +258,7 @@ public class InboundQuery extends FederationTagLibTagSupport {
 		newRecord = false;
 		commitNeeded = false;
 		parentEntities = new Vector<FederationTagLibTagSupport>();
+		this.var = null;
 
 	}
 

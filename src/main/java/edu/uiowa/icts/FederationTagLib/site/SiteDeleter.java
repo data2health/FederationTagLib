@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import java.util.Date;
 
 import javax.servlet.jsp.JspException;
@@ -14,7 +16,6 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
 
 @SuppressWarnings("serial")
-
 public class SiteDeleter extends FederationTagLibBodyTagSupport {
     int sid = 0;
     String name = null;
@@ -23,6 +24,8 @@ public class SiteDeleter extends FederationTagLibBodyTagSupport {
     Date lastValidation = null;
     String ipAddress = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
+
+	private static final Log log = LogFactory.getLog(SiteDeleter.class);
 
 
     ResultSet rs = null;
@@ -37,13 +40,13 @@ public class SiteDeleter extends FederationTagLibBodyTagSupport {
         try {
             int webapp_keySeq = 1;
             stat = getConnection().prepareStatement("DELETE from federation.site where 1=1"
-                                                        + (sid == 0 ? "" : " and sid = ?")
-                                                        );
+                                                        + (sid == 0 ? "" : " and sid = ? "));
             if (sid != 0) stat.setInt(webapp_keySeq++, sid);
             stat.execute();
 
+			webapp_keySeq = 1;
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating Site deleter", e);
             clearServiceState();
             throw new JspTagException("Error: JDBC error generating Site deleter");
         } finally {

@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import java.util.Date;
@@ -15,20 +16,23 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
 
 @SuppressWarnings("serial")
-
 public class OutboundQuery extends FederationTagLibTagSupport {
 
 	static OutboundQuery currentInstance = null;
 	boolean commitNeeded = false;
 	boolean newRecord = false;
 
-	private static final Log log =LogFactory.getLog(OutboundQuery.class);
+	private static final Log log = LogFactory.getLog(OutboundQuery.class);
 
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
 	int qid = 0;
 	String queryString = null;
 	Date queryDate = null;
+
+	private String var = null;
+
+	private OutboundQuery cachedOutboundQuery = null;
 
 	public int doStartTag() throws JspException {
 		currentInstance = this;
@@ -44,7 +48,6 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 			if (theOutboundQueryIterator == null && qid == 0) {
 				// no qid was provided - the default is to assume that it is a new OutboundQuery and to generate a new qid
 				qid = Sequence.generateID();
-				log.debug("generating new OutboundQuery " + qid);
 				insertEntity();
 			} else {
 				// an iterator or qid was provided as an attribute - we need to load a OutboundQuery from the database
@@ -66,16 +69,32 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error retrieving qid " + qid, e);
 			throw new JspTagException("Error: JDBC error retrieving qid " + qid);
 		} finally {
 			freeConnection();
 		}
+
+		OutboundQuery currentOutboundQuery = (OutboundQuery) pageContext.getAttribute("tag_outboundQuery");
+		if(currentOutboundQuery != null){
+			cachedOutboundQuery = currentOutboundQuery;
+		}
+		currentOutboundQuery = this;
+		pageContext.setAttribute((var == null ? "tag_outboundQuery" : var), currentOutboundQuery);
+
 		return EVAL_PAGE;
 	}
 
 	public int doEndTag() throws JspException {
 		currentInstance = null;
+
+		if(this.cachedOutboundQuery != null){
+			pageContext.setAttribute((var == null ? "tag_outboundQuery" : var), this.cachedOutboundQuery);
+		}else{
+			pageContext.removeAttribute((var == null ? "tag_outboundQuery" : var));
+			this.cachedOutboundQuery = null;
+		}
+
 		try {
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.outbound_query set query_string = ?, query_date = ? where qid = ?");
@@ -86,7 +105,7 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 				stmt.close();
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			clearServiceState();
@@ -111,7 +130,7 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 			stmt.executeUpdate();
 			stmt.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("Error: IOException while writing to the user", e);
 			throw new JspTagException("Error: IOException while writing to the user");
 		} finally {
 			freeConnection();
@@ -164,7 +183,19 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 		commitNeeded = true;
 	}
 
-	public static int qidValue() throws JspException {
+	public String getVar () {
+		return var;
+	}
+
+	public void setVar (String var) {
+		this.var = var;
+	}
+
+	public String getActualVar () {
+		return var;
+	}
+
+	public static Integer qidValue() throws JspException {
 		try {
 			return currentInstance.getQid();
 		} catch (Exception e) {
@@ -195,6 +226,7 @@ public class OutboundQuery extends FederationTagLibTagSupport {
 		newRecord = false;
 		commitNeeded = false;
 		parentEntities = new Vector<FederationTagLibTagSupport>();
+		this.var = null;
 
 	}
 

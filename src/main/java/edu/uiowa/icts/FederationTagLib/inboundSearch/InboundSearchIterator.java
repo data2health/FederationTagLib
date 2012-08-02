@@ -16,7 +16,6 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
 
 @SuppressWarnings("serial")
-
 public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
     int sid = 0;
     String searchString = null;
@@ -24,7 +23,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
     String ipAddress = null;
 	Vector<FederationTagLibTagSupport> parentEntities = new Vector<FederationTagLibTagSupport>();
 
-	private static final Log log =LogFactory.getLog(InboundSearch.class);
+	private static final Log log = LogFactory.getLog(InboundSearchIterator.class);
 
 
     PreparedStatement stat = null;
@@ -48,7 +47,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating InboundSearch iterator", e);
 			throw new JspTagException("Error: JDBC error generating InboundSearch iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -72,7 +71,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
 			}
 			stat.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.error("JDBC error generating InboundSearch iterator", e);
 			throw new JspTagException("Error: JDBC error generating InboundSearch iterator");
 		} finally {
 			theIterator.freeConnection();
@@ -85,7 +84,20 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
 
 
       try {
+            //run count query  
             int webapp_keySeq = 1;
+            stat = getConnection().prepareStatement("SELECT count(*) from " + generateFromClause() + " where 1=1"
+                                                        + generateJoinCriteria()
+                                                        +  generateLimitCriteria());
+            rs = stat.executeQuery();
+
+            if (rs.next()) {
+                pageContext.setAttribute(var+"Total", rs.getInt(1));
+            }
+
+
+            //run select id query  
+            webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT federation.inbound_search.sid from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
                                                         + " order by " + generateSortCriteria() + generateLimitCriteria());
@@ -97,7 +109,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_INCLUDE;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error generating InboundSearch iterator: " + stat.toString(), e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error generating InboundSearch iterator: " + stat.toString());
@@ -140,7 +152,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
                 return EVAL_BODY_AGAIN;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error iterating across InboundSearch", e);
             clearServiceState();
             freeConnection();
             throw new JspTagException("Error: JDBC error iterating across InboundSearch");
@@ -153,7 +165,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
             rs.close();
             stat.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("JDBC error ending InboundSearch iterator",e);
             throw new JspTagException("Error: JDBC error ending InboundSearch iterator");
         } finally {
             clearServiceState();
