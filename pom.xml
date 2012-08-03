@@ -3,14 +3,14 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>edu.uiowa.icts.taglib</groupId>
    <artifactId>FederationTagLib</artifactId>
-   <version>0.0.2</version>
+   <version>0.0.3-SNAPSHOT</version>
    <name>FederationTagLib</name>
 
    <url>http://www.icts.uiowa.edu/confluence/display/apps/FederationTagLib</url>
    <scm>
-      <connection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/tags/FederationTagLib-0.0.2</connection>
-      <developerConnection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/tags/FederationTagLib-0.0.2</developerConnection>
-      <url>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/tags/FederationTagLib-0.0.2</url>
+      <connection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/trunk</connection>
+      <developerConnection>scm:svn:https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib/trunk</developerConnection>
+      <url>https://srcvault.icts.uiowa.edu/repos/TagLibs/FederationTagLib</url>
    </scm>
    <distributionManagement>
       <repository>
