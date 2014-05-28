@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
@@ -176,7 +177,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
                                                         + generateJoinCriteria()
                                                         + (sid == 0 ? "" : " and sid = ?")
                                                         + (qid == 0 ? "" : " and qid = ?")
-                                                        +  generateLimitCriteria());
+                                                        + generateLimitCriteria());
             if (sid != 0) stat.setInt(webapp_keySeq++, sid);
             if (qid != 0) stat.setInt(webapp_keySeq++, qid);
             rs = stat.executeQuery();
@@ -192,7 +193,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
                                                         + generateJoinCriteria()
                                                         + (sid == 0 ? "" : " and sid = ?")
                                                         + (qid == 0 ? "" : " and qid = ?")
-                                                        + " order by " + generateSortCriteria() + generateLimitCriteria());
+                                                        + " order by " + generateSortCriteria()  +  generateLimitCriteria());
             if (sid != 0) stat.setInt(webapp_keySeq++, sid);
             if (qid != 0) stat.setInt(webapp_keySeq++, qid);
             rs = stat.executeQuery();
@@ -205,9 +206,20 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
             }
         } catch (SQLException e) {
             log.error("JDBC error generating Response iterator: " + stat.toString(), e);
-            clearServiceState();
-            freeConnection();
-            throw new JspTagException("Error: JDBC error generating Response iterator: " + stat.toString());
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: JDBC error generating Response iterator: " + stat.toString());
+				return parent.doEndTag();
+			}else{
+				throw new JspException("Error: JDBC error generating Response iterator: " + stat.toString(),e);
+			}
+
         }
 
         return SKIP_BODY;
@@ -226,9 +238,9 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
     private String generateJoinCriteria() {
        StringBuffer theBuffer = new StringBuffer();
        if (useSite)
-          theBuffer.append(" and site.sid = response.null");
+          theBuffer.append(" and site.sid = response.");
        if (useOutboundQuery)
-          theBuffer.append(" and outbound_query.qid = response.null");
+          theBuffer.append(" and outbound_query.qid = response.");
 
       return theBuffer.toString();
     }
@@ -249,7 +261,7 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
         }
     }
 
-    public int doAfterBody() throws JspTagException {
+    public int doAfterBody() throws JspException {
         try {
             if (rs.next()) {
                 sid = rs.getInt(1);
@@ -259,20 +271,69 @@ public class ResponseIterator extends FederationTagLibBodyTagSupport {
             }
         } catch (SQLException e) {
             log.error("JDBC error iterating across Response", e);
-            clearServiceState();
-            freeConnection();
-            throw new JspTagException("Error: JDBC error iterating across Response");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error iterating across Response" + stat.toString());
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error iterating across Response",e);
+			}
+
         }
         return SKIP_BODY;
     }
 
     public int doEndTag() throws JspTagException, JspException {
         try {
+			if(pageContext != null){
+				Boolean error = (Boolean) pageContext.getAttribute("tagError");
+				if(error != null && error){
+
+					freeConnection();
+					clearServiceState();
+
+					Exception e = null; // (Exception) pageContext.getAttribute("tagErrorException");
+					String message = null; // (String) pageContext.getAttribute("tagErrorMessage");
+
+					if(pageContext != null){
+						e = (Exception) pageContext.getAttribute("tagErrorException");
+						message = (String) pageContext.getAttribute("tagErrorMessage");
+
+					}
+					Tag parent = getParent();
+					if(parent != null){
+						return parent.doEndTag();
+					}else if(e != null && message != null){
+						throw new JspException(message,e);
+					}else if(parent == null && pageContext != null){
+						pageContext.removeAttribute("tagError");
+						pageContext.removeAttribute("tagErrorException");
+						pageContext.removeAttribute("tagErrorMessage");
+					}
+				}
+			}
             rs.close();
             stat.close();
         } catch (SQLException e) {
             log.error("JDBC error ending Response iterator",e);
-            throw new JspTagException("Error: JDBC error ending Response iterator");
+			freeConnection();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving sid " + sid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("Error: JDBC error ending Response iterator",e);
+			}
+
         } finally {
             clearServiceState();
             freeConnection();

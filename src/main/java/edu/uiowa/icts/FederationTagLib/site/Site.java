@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
+
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
@@ -79,17 +81,32 @@ public class Site extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("JDBC error retrieving sid " + sid, e);
-			throw new JspTagException("Error: JDBC error retrieving sid " + sid);
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving sid " + sid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error retrieving sid " + sid,e);
+			}
+
 		} finally {
 			freeConnection();
 		}
 
-		Site currentSite = (Site) pageContext.getAttribute("tag_site");
-		if(currentSite != null){
-			cachedSite = currentSite;
+		if(pageContext != null){
+			Site currentSite = (Site) pageContext.getAttribute("tag_site");
+			if(currentSite != null){
+				cachedSite = currentSite;
+			}
+			currentSite = this;
+			pageContext.setAttribute((var == null ? "tag_site" : var), currentSite);
 		}
-		currentSite = this;
-		pageContext.setAttribute((var == null ? "tag_site" : var), currentSite);
 
 		return EVAL_PAGE;
 	}
@@ -97,14 +114,40 @@ public class Site extends FederationTagLibTagSupport {
 	public int doEndTag() throws JspException {
 		currentInstance = null;
 
-		if(this.cachedSite != null){
-			pageContext.setAttribute((var == null ? "tag_site" : var), this.cachedSite);
-		}else{
-			pageContext.removeAttribute((var == null ? "tag_site" : var));
-			this.cachedSite = null;
+		if(pageContext != null){
+			if(this.cachedSite != null){
+				pageContext.setAttribute((var == null ? "tag_site" : var), this.cachedSite);
+			}else{
+				pageContext.removeAttribute((var == null ? "tag_site" : var));
+				this.cachedSite = null;
+			}
 		}
 
 		try {
+			Boolean error = null; // (Boolean) pageContext.getAttribute("tagError");
+			if(pageContext != null){
+				error = (Boolean) pageContext.getAttribute("tagError");
+			}
+
+			if(error != null && error){
+
+				freeConnection();
+				clearServiceState();
+
+				Exception e = (Exception) pageContext.getAttribute("tagErrorException");
+				String message = (String) pageContext.getAttribute("tagErrorMessage");
+
+				Tag parent = getParent();
+				if(parent != null){
+					return parent.doEndTag();
+				}else if(e != null && message != null){
+					throw new JspException(message,e);
+				}else if(parent == null){
+					pageContext.removeAttribute("tagError");
+					pageContext.removeAttribute("tagErrorException");
+					pageContext.removeAttribute("tagErrorMessage");
+				}
+			}
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.site set name = ?, bootstrap_url = ?, aggregate_query_url = ?, last_validation = ?, ip_address = ? where sid = ?");
 				stmt.setString(1,name);
@@ -118,7 +161,20 @@ public class Site extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: IOException while writing to the user");
+				return parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: IOException while writing to the user");
+			}
+
 		} finally {
 			clearServiceState();
 			freeConnection();
@@ -126,36 +182,34 @@ public class Site extends FederationTagLibTagSupport {
 		return super.doEndTag();
 	}
 
-	public void insertEntity() throws JspException {
-		try {
-			if (sid == 0) {
-				sid = Sequence.generateID();
-				log.debug("generating new Site " + sid);
-			}
-
-			if (name == null)
-				name = "";
-			if (bootstrapUrl == null)
-				bootstrapUrl = "";
-			if (aggregateQueryUrl == null)
-				aggregateQueryUrl = "";
-			if (ipAddress == null)
-				ipAddress = "";
-			PreparedStatement stmt = getConnection().prepareStatement("insert into federation.site(sid,name,bootstrap_url,aggregate_query_url,last_validation,ip_address) values (?,?,?,?,?,?)");
-			stmt.setInt(1,sid);
-			stmt.setString(2,name);
-			stmt.setString(3,bootstrapUrl);
-			stmt.setString(4,aggregateQueryUrl);
-			stmt.setTimestamp(5,lastValidation == null ? null : new java.sql.Timestamp(lastValidation.getTime()));
-			stmt.setString(6,ipAddress);
-			stmt.executeUpdate();
-			stmt.close();
-		} catch (SQLException e) {
-			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
-		} finally {
-			freeConnection();
+	public void insertEntity() throws JspException, SQLException {
+		if (sid == 0) {
+			sid = Sequence.generateID();
+			log.debug("generating new Site " + sid);
 		}
+
+		if (name == null){
+			name = "";
+		}
+		if (bootstrapUrl == null){
+			bootstrapUrl = "";
+		}
+		if (aggregateQueryUrl == null){
+			aggregateQueryUrl = "";
+		}
+		if (ipAddress == null){
+			ipAddress = "";
+		}
+		PreparedStatement stmt = getConnection().prepareStatement("insert into federation.site(sid,name,bootstrap_url,aggregate_query_url,last_validation,ip_address) values (?,?,?,?,?,?)");
+		stmt.setInt(1,sid);
+		stmt.setString(2,name);
+		stmt.setString(3,bootstrapUrl);
+		stmt.setString(4,aggregateQueryUrl);
+		stmt.setTimestamp(5,lastValidation == null ? null : new java.sql.Timestamp(lastValidation.getTime()));
+		stmt.setString(6,ipAddress);
+		stmt.executeUpdate();
+		stmt.close();
+		freeConnection();
 	}
 
 	public int getSid () {

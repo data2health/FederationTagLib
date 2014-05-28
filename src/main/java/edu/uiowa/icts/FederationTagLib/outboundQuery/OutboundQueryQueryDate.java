@@ -2,6 +2,8 @@ package edu.uiowa.icts.FederationTagLib.outboundQuery;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
+
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,12 +14,12 @@ import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 
 @SuppressWarnings("serial")
 public class OutboundQueryQueryDate extends FederationTagLibTagSupport {
+
 	String type = "DATE";
 	String dateStyle = "DEFAULT";
 	String timeStyle = "DEFAULT";
 	String pattern = null;
 	private static final Log log = LogFactory.getLog(OutboundQueryQueryDate.class);
-
 
 	public int doStartTag() throws JspException {
 		try {
@@ -41,28 +43,57 @@ public class OutboundQueryQueryDate extends FederationTagLibTagSupport {
 			}
 		} catch (Exception e) {
 			log.error("Can't find enclosing OutboundQuery for queryDate tag ", e);
-			throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			freeConnection();
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: Can't find enclosing OutboundQuery for queryDate tag ");
+				return parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			}
+
 		}
 		return SKIP_BODY;
 	}
 
-	public Date getQueryDate() throws JspTagException {
+	public Date getQueryDate() throws JspException {
 		try {
 			OutboundQuery theOutboundQuery = (OutboundQuery)findAncestorWithClass(this, OutboundQuery.class);
 			return theOutboundQuery.getQueryDate();
 		} catch (Exception e) {
-			log.error(" Can't find enclosing OutboundQuery for queryDate tag ", e);
-			throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			log.error("Can't find enclosing OutboundQuery for queryDate tag ", e);
+			freeConnection();
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: Can't find enclosing OutboundQuery for queryDate tag ");
+				parent.doEndTag();
+				return null;
+			}else{
+				throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			}
 		}
 	}
 
-	public void setQueryDate(Date queryDate) throws JspTagException {
+	public void setQueryDate(Date queryDate) throws JspException {
 		try {
 			OutboundQuery theOutboundQuery = (OutboundQuery)findAncestorWithClass(this, OutboundQuery.class);
 			theOutboundQuery.setQueryDate(queryDate);
 		} catch (Exception e) {
 			log.error("Can't find enclosing OutboundQuery for queryDate tag ", e);
-			throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			freeConnection();
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: Can't find enclosing OutboundQuery for queryDate tag ");
+				parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: Can't find enclosing OutboundQuery for queryDate tag ");
+			}
 		}
 	}
 

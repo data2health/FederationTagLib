@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
+
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
@@ -73,17 +75,32 @@ public class InboundQuery extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("JDBC error retrieving qid " + qid, e);
-			throw new JspTagException("Error: JDBC error retrieving qid " + qid);
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving qid " + qid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error retrieving qid " + qid,e);
+			}
+
 		} finally {
 			freeConnection();
 		}
 
-		InboundQuery currentInboundQuery = (InboundQuery) pageContext.getAttribute("tag_inboundQuery");
-		if(currentInboundQuery != null){
-			cachedInboundQuery = currentInboundQuery;
+		if(pageContext != null){
+			InboundQuery currentInboundQuery = (InboundQuery) pageContext.getAttribute("tag_inboundQuery");
+			if(currentInboundQuery != null){
+				cachedInboundQuery = currentInboundQuery;
+			}
+			currentInboundQuery = this;
+			pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), currentInboundQuery);
 		}
-		currentInboundQuery = this;
-		pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), currentInboundQuery);
 
 		return EVAL_PAGE;
 	}
@@ -91,14 +108,40 @@ public class InboundQuery extends FederationTagLibTagSupport {
 	public int doEndTag() throws JspException {
 		currentInstance = null;
 
-		if(this.cachedInboundQuery != null){
-			pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), this.cachedInboundQuery);
-		}else{
-			pageContext.removeAttribute((var == null ? "tag_inboundQuery" : var));
-			this.cachedInboundQuery = null;
+		if(pageContext != null){
+			if(this.cachedInboundQuery != null){
+				pageContext.setAttribute((var == null ? "tag_inboundQuery" : var), this.cachedInboundQuery);
+			}else{
+				pageContext.removeAttribute((var == null ? "tag_inboundQuery" : var));
+				this.cachedInboundQuery = null;
+			}
 		}
 
 		try {
+			Boolean error = null; // (Boolean) pageContext.getAttribute("tagError");
+			if(pageContext != null){
+				error = (Boolean) pageContext.getAttribute("tagError");
+			}
+
+			if(error != null && error){
+
+				freeConnection();
+				clearServiceState();
+
+				Exception e = (Exception) pageContext.getAttribute("tagErrorException");
+				String message = (String) pageContext.getAttribute("tagErrorMessage");
+
+				Tag parent = getParent();
+				if(parent != null){
+					return parent.doEndTag();
+				}else if(e != null && message != null){
+					throw new JspException(message,e);
+				}else if(parent == null){
+					pageContext.removeAttribute("tagError");
+					pageContext.removeAttribute("tagErrorException");
+					pageContext.removeAttribute("tagErrorMessage");
+				}
+			}
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.inbound_query set query_string = ?, query_date = ?, ip_address = ? where qid = ?");
 				stmt.setString(1,queryString);
@@ -110,7 +153,20 @@ public class InboundQuery extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: IOException while writing to the user");
+				return parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: IOException while writing to the user");
+			}
+
 		} finally {
 			clearServiceState();
 			freeConnection();
@@ -118,30 +174,26 @@ public class InboundQuery extends FederationTagLibTagSupport {
 		return super.doEndTag();
 	}
 
-	public void insertEntity() throws JspException {
-		try {
-			if (qid == 0) {
-				qid = Sequence.generateID();
-				log.debug("generating new InboundQuery " + qid);
-			}
-
-			if (queryString == null)
-				queryString = "";
-			if (ipAddress == null)
-				ipAddress = "";
-			PreparedStatement stmt = getConnection().prepareStatement("insert into federation.inbound_query(qid,query_string,query_date,ip_address) values (?,?,?,?)");
-			stmt.setInt(1,qid);
-			stmt.setString(2,queryString);
-			stmt.setTimestamp(3,queryDate == null ? null : new java.sql.Timestamp(queryDate.getTime()));
-			stmt.setString(4,ipAddress);
-			stmt.executeUpdate();
-			stmt.close();
-		} catch (SQLException e) {
-			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
-		} finally {
-			freeConnection();
+	public void insertEntity() throws JspException, SQLException {
+		if (qid == 0) {
+			qid = Sequence.generateID();
+			log.debug("generating new InboundQuery " + qid);
 		}
+
+		if (queryString == null){
+			queryString = "";
+		}
+		if (ipAddress == null){
+			ipAddress = "";
+		}
+		PreparedStatement stmt = getConnection().prepareStatement("insert into federation.inbound_query(qid,query_string,query_date,ip_address) values (?,?,?,?)");
+		stmt.setInt(1,qid);
+		stmt.setString(2,queryString);
+		stmt.setTimestamp(3,queryDate == null ? null : new java.sql.Timestamp(queryDate.getTime()));
+		stmt.setString(4,ipAddress);
+		stmt.executeUpdate();
+		stmt.close();
+		freeConnection();
 	}
 
 	public int getQid () {

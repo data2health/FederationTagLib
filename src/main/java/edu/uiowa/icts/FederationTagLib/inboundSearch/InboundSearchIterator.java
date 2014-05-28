@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.FederationTagLibBodyTagSupport;
@@ -88,7 +89,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
             int webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT count(*) from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
-                                                        +  generateLimitCriteria());
+                                                        + generateLimitCriteria());
             rs = stat.executeQuery();
 
             if (rs.next()) {
@@ -100,7 +101,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
             webapp_keySeq = 1;
             stat = getConnection().prepareStatement("SELECT federation.inbound_search.sid from " + generateFromClause() + " where 1=1"
                                                         + generateJoinCriteria()
-                                                        + " order by " + generateSortCriteria() + generateLimitCriteria());
+                                                        + " order by " + generateSortCriteria()  +  generateLimitCriteria());
             rs = stat.executeQuery();
 
             if (rs.next()) {
@@ -110,9 +111,20 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
             }
         } catch (SQLException e) {
             log.error("JDBC error generating InboundSearch iterator: " + stat.toString(), e);
-            clearServiceState();
-            freeConnection();
-            throw new JspTagException("Error: JDBC error generating InboundSearch iterator: " + stat.toString());
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: JDBC error generating InboundSearch iterator: " + stat.toString());
+				return parent.doEndTag();
+			}else{
+				throw new JspException("Error: JDBC error generating InboundSearch iterator: " + stat.toString(),e);
+			}
+
         }
 
         return SKIP_BODY;
@@ -144,7 +156,7 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
         }
     }
 
-    public int doAfterBody() throws JspTagException {
+    public int doAfterBody() throws JspException {
         try {
             if (rs.next()) {
                 sid = rs.getInt(1);
@@ -153,20 +165,69 @@ public class InboundSearchIterator extends FederationTagLibBodyTagSupport {
             }
         } catch (SQLException e) {
             log.error("JDBC error iterating across InboundSearch", e);
-            clearServiceState();
-            freeConnection();
-            throw new JspTagException("Error: JDBC error iterating across InboundSearch");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error iterating across InboundSearch" + stat.toString());
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error iterating across InboundSearch",e);
+			}
+
         }
         return SKIP_BODY;
     }
 
     public int doEndTag() throws JspTagException, JspException {
         try {
+			if(pageContext != null){
+				Boolean error = (Boolean) pageContext.getAttribute("tagError");
+				if(error != null && error){
+
+					freeConnection();
+					clearServiceState();
+
+					Exception e = null; // (Exception) pageContext.getAttribute("tagErrorException");
+					String message = null; // (String) pageContext.getAttribute("tagErrorMessage");
+
+					if(pageContext != null){
+						e = (Exception) pageContext.getAttribute("tagErrorException");
+						message = (String) pageContext.getAttribute("tagErrorMessage");
+
+					}
+					Tag parent = getParent();
+					if(parent != null){
+						return parent.doEndTag();
+					}else if(e != null && message != null){
+						throw new JspException(message,e);
+					}else if(parent == null && pageContext != null){
+						pageContext.removeAttribute("tagError");
+						pageContext.removeAttribute("tagErrorException");
+						pageContext.removeAttribute("tagErrorMessage");
+					}
+				}
+			}
             rs.close();
             stat.close();
         } catch (SQLException e) {
             log.error("JDBC error ending InboundSearch iterator",e);
-            throw new JspTagException("Error: JDBC error ending InboundSearch iterator");
+			freeConnection();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving sid " + sid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("Error: JDBC error ending InboundSearch iterator",e);
+			}
+
         } finally {
             clearServiceState();
             freeConnection();

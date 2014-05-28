@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
+
 import edu.uiowa.icts.FederationTagLib.site.Site;
 import edu.uiowa.icts.FederationTagLib.outboundQuery.OutboundQuery;
 
@@ -164,17 +166,32 @@ public class Response extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("JDBC error retrieving sid " + sid, e);
-			throw new JspTagException("Error: JDBC error retrieving sid " + sid);
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving sid " + sid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error retrieving sid " + sid,e);
+			}
+
 		} finally {
 			freeConnection();
 		}
 
-		Response currentResponse = (Response) pageContext.getAttribute("tag_response");
-		if(currentResponse != null){
-			cachedResponse = currentResponse;
+		if(pageContext != null){
+			Response currentResponse = (Response) pageContext.getAttribute("tag_response");
+			if(currentResponse != null){
+				cachedResponse = currentResponse;
+			}
+			currentResponse = this;
+			pageContext.setAttribute((var == null ? "tag_response" : var), currentResponse);
 		}
-		currentResponse = this;
-		pageContext.setAttribute((var == null ? "tag_response" : var), currentResponse);
 
 		return EVAL_PAGE;
 	}
@@ -182,14 +199,40 @@ public class Response extends FederationTagLibTagSupport {
 	public int doEndTag() throws JspException {
 		currentInstance = null;
 
-		if(this.cachedResponse != null){
-			pageContext.setAttribute((var == null ? "tag_response" : var), this.cachedResponse);
-		}else{
-			pageContext.removeAttribute((var == null ? "tag_response" : var));
-			this.cachedResponse = null;
+		if(pageContext != null){
+			if(this.cachedResponse != null){
+				pageContext.setAttribute((var == null ? "tag_response" : var), this.cachedResponse);
+			}else{
+				pageContext.removeAttribute((var == null ? "tag_response" : var));
+				this.cachedResponse = null;
+			}
 		}
 
 		try {
+			Boolean error = null; // (Boolean) pageContext.getAttribute("tagError");
+			if(pageContext != null){
+				error = (Boolean) pageContext.getAttribute("tagError");
+			}
+
+			if(error != null && error){
+
+				freeConnection();
+				clearServiceState();
+
+				Exception e = (Exception) pageContext.getAttribute("tagErrorException");
+				String message = (String) pageContext.getAttribute("tagErrorMessage");
+
+				Tag parent = getParent();
+				if(parent != null){
+					return parent.doEndTag();
+				}else if(e != null && message != null){
+					throw new JspException(message,e);
+				}else if(parent == null){
+					pageContext.removeAttribute("tagError");
+					pageContext.removeAttribute("tagErrorException");
+					pageContext.removeAttribute("tagErrorMessage");
+				}
+			}
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.response set request_date = ?, response_date = ?, hit_count = ?, population_type = ?, preview_url = ?, results_url = ?, click_date = ? where sid = ? and qid = ?");
 				stmt.setTimestamp(1,requestDate == null ? null : new java.sql.Timestamp(requestDate.getTime()));
@@ -206,7 +249,20 @@ public class Response extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: IOException while writing to the user");
+				return parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: IOException while writing to the user");
+			}
+
 		} finally {
 			clearServiceState();
 			freeConnection();
@@ -214,32 +270,29 @@ public class Response extends FederationTagLibTagSupport {
 		return super.doEndTag();
 	}
 
-	public void insertEntity() throws JspException {
-		try {
-			if (populationType == null)
-				populationType = "";
-			if (previewUrl == null)
-				previewUrl = "";
-			if (resultsUrl == null)
-				resultsUrl = "";
-			PreparedStatement stmt = getConnection().prepareStatement("insert into federation.response(sid,qid,request_date,response_date,hit_count,population_type,preview_url,results_url,click_date) values (?,?,?,?,?,?,?,?,?)");
-			stmt.setInt(1,sid);
-			stmt.setInt(2,qid);
-			stmt.setTimestamp(3,requestDate == null ? null : new java.sql.Timestamp(requestDate.getTime()));
-			stmt.setTimestamp(4,responseDate == null ? null : new java.sql.Timestamp(responseDate.getTime()));
-			stmt.setInt(5,hitCount);
-			stmt.setString(6,populationType);
-			stmt.setString(7,previewUrl);
-			stmt.setString(8,resultsUrl);
-			stmt.setTimestamp(9,clickDate == null ? null : new java.sql.Timestamp(clickDate.getTime()));
-			stmt.executeUpdate();
-			stmt.close();
-		} catch (SQLException e) {
-			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
-		} finally {
-			freeConnection();
+	public void insertEntity() throws JspException, SQLException {
+		if (populationType == null){
+			populationType = "";
 		}
+		if (previewUrl == null){
+			previewUrl = "";
+		}
+		if (resultsUrl == null){
+			resultsUrl = "";
+		}
+		PreparedStatement stmt = getConnection().prepareStatement("insert into federation.response(sid,qid,request_date,response_date,hit_count,population_type,preview_url,results_url,click_date) values (?,?,?,?,?,?,?,?,?)");
+		stmt.setInt(1,sid);
+		stmt.setInt(2,qid);
+		stmt.setTimestamp(3,requestDate == null ? null : new java.sql.Timestamp(requestDate.getTime()));
+		stmt.setTimestamp(4,responseDate == null ? null : new java.sql.Timestamp(responseDate.getTime()));
+		stmt.setInt(5,hitCount);
+		stmt.setString(6,populationType);
+		stmt.setString(7,previewUrl);
+		stmt.setString(8,resultsUrl);
+		stmt.setTimestamp(9,clickDate == null ? null : new java.sql.Timestamp(clickDate.getTime()));
+		stmt.executeUpdate();
+		stmt.close();
+		freeConnection();
 	}
 
 	public int getSid () {

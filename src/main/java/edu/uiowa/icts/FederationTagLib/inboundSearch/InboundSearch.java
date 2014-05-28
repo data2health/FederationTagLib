@@ -11,6 +11,8 @@ import java.util.Date;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspTagException;
+import javax.servlet.jsp.tagext.Tag;
+
 
 import edu.uiowa.icts.FederationTagLib.FederationTagLibTagSupport;
 import edu.uiowa.icts.FederationTagLib.Sequence;
@@ -73,17 +75,32 @@ public class InboundSearch extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("JDBC error retrieving sid " + sid, e);
-			throw new JspTagException("Error: JDBC error retrieving sid " + sid);
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "JDBC error retrieving sid " + sid);
+				return parent.doEndTag();
+			}else{
+				throw new JspException("JDBC error retrieving sid " + sid,e);
+			}
+
 		} finally {
 			freeConnection();
 		}
 
-		InboundSearch currentInboundSearch = (InboundSearch) pageContext.getAttribute("tag_inboundSearch");
-		if(currentInboundSearch != null){
-			cachedInboundSearch = currentInboundSearch;
+		if(pageContext != null){
+			InboundSearch currentInboundSearch = (InboundSearch) pageContext.getAttribute("tag_inboundSearch");
+			if(currentInboundSearch != null){
+				cachedInboundSearch = currentInboundSearch;
+			}
+			currentInboundSearch = this;
+			pageContext.setAttribute((var == null ? "tag_inboundSearch" : var), currentInboundSearch);
 		}
-		currentInboundSearch = this;
-		pageContext.setAttribute((var == null ? "tag_inboundSearch" : var), currentInboundSearch);
 
 		return EVAL_PAGE;
 	}
@@ -91,14 +108,40 @@ public class InboundSearch extends FederationTagLibTagSupport {
 	public int doEndTag() throws JspException {
 		currentInstance = null;
 
-		if(this.cachedInboundSearch != null){
-			pageContext.setAttribute((var == null ? "tag_inboundSearch" : var), this.cachedInboundSearch);
-		}else{
-			pageContext.removeAttribute((var == null ? "tag_inboundSearch" : var));
-			this.cachedInboundSearch = null;
+		if(pageContext != null){
+			if(this.cachedInboundSearch != null){
+				pageContext.setAttribute((var == null ? "tag_inboundSearch" : var), this.cachedInboundSearch);
+			}else{
+				pageContext.removeAttribute((var == null ? "tag_inboundSearch" : var));
+				this.cachedInboundSearch = null;
+			}
 		}
 
 		try {
+			Boolean error = null; // (Boolean) pageContext.getAttribute("tagError");
+			if(pageContext != null){
+				error = (Boolean) pageContext.getAttribute("tagError");
+			}
+
+			if(error != null && error){
+
+				freeConnection();
+				clearServiceState();
+
+				Exception e = (Exception) pageContext.getAttribute("tagErrorException");
+				String message = (String) pageContext.getAttribute("tagErrorMessage");
+
+				Tag parent = getParent();
+				if(parent != null){
+					return parent.doEndTag();
+				}else if(e != null && message != null){
+					throw new JspException(message,e);
+				}else if(parent == null){
+					pageContext.removeAttribute("tagError");
+					pageContext.removeAttribute("tagErrorException");
+					pageContext.removeAttribute("tagErrorMessage");
+				}
+			}
 			if (commitNeeded) {
 				PreparedStatement stmt = getConnection().prepareStatement("update federation.inbound_search set search_string = ?, search_date = ?, ip_address = ? where sid = ?");
 				stmt.setString(1,searchString);
@@ -110,7 +153,20 @@ public class InboundSearch extends FederationTagLibTagSupport {
 			}
 		} catch (SQLException e) {
 			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
+
+			freeConnection();
+			clearServiceState();
+
+			Tag parent = getParent();
+			if(parent != null){
+				pageContext.setAttribute("tagError", true);
+				pageContext.setAttribute("tagErrorException", e);
+				pageContext.setAttribute("tagErrorMessage", "Error: IOException while writing to the user");
+				return parent.doEndTag();
+			}else{
+				throw new JspTagException("Error: IOException while writing to the user");
+			}
+
 		} finally {
 			clearServiceState();
 			freeConnection();
@@ -118,30 +174,26 @@ public class InboundSearch extends FederationTagLibTagSupport {
 		return super.doEndTag();
 	}
 
-	public void insertEntity() throws JspException {
-		try {
-			if (sid == 0) {
-				sid = Sequence.generateID();
-				log.debug("generating new InboundSearch " + sid);
-			}
-
-			if (searchString == null)
-				searchString = "";
-			if (ipAddress == null)
-				ipAddress = "";
-			PreparedStatement stmt = getConnection().prepareStatement("insert into federation.inbound_search(sid,search_string,search_date,ip_address) values (?,?,?,?)");
-			stmt.setInt(1,sid);
-			stmt.setString(2,searchString);
-			stmt.setTimestamp(3,searchDate == null ? null : new java.sql.Timestamp(searchDate.getTime()));
-			stmt.setString(4,ipAddress);
-			stmt.executeUpdate();
-			stmt.close();
-		} catch (SQLException e) {
-			log.error("Error: IOException while writing to the user", e);
-			throw new JspTagException("Error: IOException while writing to the user");
-		} finally {
-			freeConnection();
+	public void insertEntity() throws JspException, SQLException {
+		if (sid == 0) {
+			sid = Sequence.generateID();
+			log.debug("generating new InboundSearch " + sid);
 		}
+
+		if (searchString == null){
+			searchString = "";
+		}
+		if (ipAddress == null){
+			ipAddress = "";
+		}
+		PreparedStatement stmt = getConnection().prepareStatement("insert into federation.inbound_search(sid,search_string,search_date,ip_address) values (?,?,?,?)");
+		stmt.setInt(1,sid);
+		stmt.setString(2,searchString);
+		stmt.setTimestamp(3,searchDate == null ? null : new java.sql.Timestamp(searchDate.getTime()));
+		stmt.setString(4,ipAddress);
+		stmt.executeUpdate();
+		stmt.close();
+		freeConnection();
 	}
 
 	public int getSid () {
