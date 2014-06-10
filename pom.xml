@@ -22,9 +22,9 @@
 
    <dependencies>
       <dependency>
-         <groupId>javax.servlet</groupId>
+         <groupId>javax.servlet.jsp</groupId>
          <artifactId>jsp-api</artifactId>
-         <version>2.0</version>
+         <version>2.2</version>
          <scope>provided</scope>
       </dependency>
       <dependency>
@@ -167,7 +167,7 @@
 									<pluginExecutionFilter>
 										<groupId>edu.uiowa.icts.plugin</groupId>
 										<artifactId>protogen-plugin</artifactId>
-										<versionRange>[0.0.9,)</versionRange>
+										<version>0.0.10</version>
 										<goals>
 											<goal>WebApp</goal>
 										</goals>
