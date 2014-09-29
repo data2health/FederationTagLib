@@ -72,13 +72,7 @@ class SearchThread implements Runnable {
             System.out.println("\t" + sid + "\tpopulation type: " + resultType);
             System.out.println("\t" + sid + "\tpreview URL: " + previewURL);
             System.out.println("\t" + sid + "\tresults URL: " + resultsURL);
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (DocumentException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
